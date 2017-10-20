@@ -19,6 +19,6 @@ runcmd:
  - apt --assume-yes install --no-install-recommends fenics
  - pip3 install numpy celery flask
  - cd /home/ubuntu
- - sudo -u ubuntu git clone https://github.com/harpaj/acc14.git && cd acc14
+ - sudo -u ubuntu git clone https://github.com/alekodu/acc14.git && cd acc14
  - sudo -u ubuntu cp /tmp/celeryconfig_temp celeryconfig.py
  - sudo -u ubuntu celery -A tasks.celery worker --loglevel=INFO &
