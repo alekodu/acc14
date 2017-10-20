@@ -1,5 +1,6 @@
 from celery import Celery
 from csv import DictReader
+import psutil
 import subprocess
 
 celery = Celery('tasks')
@@ -61,3 +62,11 @@ def one_angle(
             result.append(row)
 
     return angle, result
+
+'''@app.on_after_configure.connect
+def config_periodic_cpu_monitor(sender, **kwargs):
+    sender.add_periodic_task(60.0, cpu_monitor.s(), expires=10)'''
+
+@app.task
+def cpu_monitor():
+    return psutil.cpu_percent()

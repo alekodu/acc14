@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from celery.result import ResultSet
-import time
+import time, threading
 import os
 import json
 from tasks import one_angle
@@ -84,6 +84,20 @@ def schedule_run():
     }
     return jsonify(response)
 
+def monitor_cluster_cpu(nodes):
+    cpu_tasks = []
+    all_cpu_util = []
+    cpu_util = 0
+    
+    for node in nodes:
+        cpu_tasks.append(cpu_monitor.delay())
+
+    all_cpu_util = ResultSet(cpu_tasks).join_native()
+    cpu_util = sum(ResultSet)/nodes
+    print all_cpu_util, cpu_util
+
+    threading.Timer(60, monitor_cluster_cpu).start()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
+    monitor_cluster_cpu(8)
